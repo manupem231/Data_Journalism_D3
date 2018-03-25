@@ -4,4 +4,6 @@ In this Data Driven Document (D3), I have explored certain associations between 
 
 This document was created using D3, the JavaScript library for visualizing data with HTML, SVG, and CSS.
 
+### Output image from the script:
+
 ![4-scatter](images/Scatter.PNG)
