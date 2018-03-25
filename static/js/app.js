@@ -17,7 +17,7 @@ var svg = d3
 
 var chart = svg.append('g');
 
-d3.csv('Data.csv', function(err, Data) {
+d3.csv('data/Data.csv', function(err, Data) {
   if (err) throw err;
 
   Data.forEach(function(data) {
@@ -47,7 +47,8 @@ d3.csv('Data.csv', function(err, Data) {
       return +data.marriedPopulation * 1.2;
     }),
   ]);
-
+  
+  // Defining tooltip
   var toolTip = d3
     .tip()
     .attr('class', 'tooltip')
@@ -62,7 +63,8 @@ d3.csv('Data.csv', function(err, Data) {
     });
 
   chart.call(toolTip);
-
+ 
+  // Defining circles in the chart
   chart
     .selectAll('circle')
     .data(Data)
@@ -74,8 +76,8 @@ d3.csv('Data.csv', function(err, Data) {
     .attr('cy', function(data, index) {
       return yLinearScale(data.marriedPopulation);
     })
-    .attr('r', '10')
-    .attr('fill', 'red')
+    .attr('r', '12')
+    .attr('fill', '#ADD8E6')
     .on('mouseover', function(data) {
       toolTip.show(data);
     })
@@ -84,13 +86,33 @@ d3.csv('Data.csv', function(err, Data) {
       toolTip.hide(data);
     });
 
+  // Defining text within circle
+    chart
+        .selectAll("text")
+        .data(Data)
+        .enter()
+        .append("text")
+        .text(function (data) {
+            return data.abbrevation;
+        })
+        .attr("x", function (data) {
+            return xLinearScale(data.unemploymentPopulation);
+        })
+        .attr("y", function (data) {
+            return yLinearScale(data.marriedPopulation);
+        })
+        .attr("font-size", "12px")
+        .attr("text-anchor", "middle")
+        .attr("class","stateText")
+
   chart
     .append('g')
     .attr('transform', `translate(0, ${height})`)
     .call(bottomAxis);
 
   chart.append('g').call(leftAxis);
-
+  
+  // Append y-axis labels
   chart
     .append('text')
     .attr('transform', 'rotate(-90)')
@@ -98,7 +120,7 @@ d3.csv('Data.csv', function(err, Data) {
     .attr('x', 0 - height / 2)
     .attr('dy', '1em')
     .attr('class', 'axisText')
-    .text('Married population of each US state (%)');
+    .text('Married population (%)');
 
   // Append x-axis labels
   chart
@@ -108,7 +130,6 @@ d3.csv('Data.csv', function(err, Data) {
       'translate(' + width / 2 + ' ,' + (height + margin.top + 30) + ')',
     )
     .attr('class', 'axisText')
-    .text('Unemployment population of each US state (%)');
+    .text('Unemployment population (%)');
 
 });
-
